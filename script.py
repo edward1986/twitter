@@ -5,6 +5,10 @@ from string import Template
 from twikit import Client
 import telegram
 
+# Apply patch to twikit
+from twikit_patch import apply_patch
+apply_patch()
+
 last_messages = {}
 
 def load_last_messages():
