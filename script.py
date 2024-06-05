@@ -31,7 +31,7 @@ def create_message_template(user_name, followers_list):
     if not new_followers:
         print(f"No new followers for {user_name}.")
         return None
-    followers_formatted = '\n'.join([f'<a style="" href="https://twitter.com/{follower.screen_name}">{follower.name}</a>' for follower in new_followers])
+    followers_formatted = '\n'.join([f'<a href="https://twitter.com/{follower.screen_name}">{follower.name}</a>' for follower in new_followers])
     for tweet in followers_list:
         save_last_message(str(tweet.name), tweet.name)
     return template.substitute(user=user_name, followers=followers_formatted)
@@ -67,9 +67,6 @@ def fetch_and_notify_new_followers():
         if message:
             data = {'chat_id': CHAT_ID, 'text': message, 'parse_mode': 'HTML'}
             response = requests.get(url, params=data)
-
-def send_telegram_message(text):
-    bot.send_message(chat_id=CHAT_ID, text=text, parse_mode=telegram.ParseMode.HTML)
 
 if __name__ == "__main__":
     fetch_and_notify_new_followers()
