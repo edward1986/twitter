@@ -5,8 +5,21 @@ from string import Template
 from twikit import Client
 import telegram
 
-# Apply patch to twikit
-from twikit_patch import apply_patch
+# Apply patch to twikit if needed
+def apply_patch():
+    import site
+    import re
+    site_packages = site.getsitepackages()
+    for site_package in site_packages:
+        twikit_streaming_path = os.path.join(site_package, 'twikit', 'streaming.py')
+        if os.path.exists(twikit_streaming_path):
+            with open(twikit_streaming_path, 'r') as file:
+                content = file.read()
+            content = re.sub(r'StreamEventType = \(ConfigEvent \| SubscriptionsEvent \|', 
+                             'StreamEventType = [ConfigEvent, SubscriptionsEvent,', content)
+            with open(twikit_streaming_path, 'w') as file:
+                file.write(content)
+
 apply_patch()
 
 last_messages = {}
