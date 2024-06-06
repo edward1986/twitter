@@ -26,7 +26,7 @@ last_messages = {}
 
 def load_last_messages():
     try:
-        with open('last_messages.json', 'r') as file:
+        with open('last_messages.json', 'r') as file):
             return json.load(file)
     except FileNotFoundError:
         with open('last_messages.json', 'w') as file:
@@ -65,22 +65,19 @@ def login_with_confirmation_code():
         client.login(
             auth_info_1=USERNAME,
             auth_info_2=EMAIL,
-            password=PASSWORD,
-            confirmation_code=CONFIRMATION_CODE
+            password=PASSWORD
         )
     except Exception as e:
-        print(str(e).lower())
         if "confirmation code" in str(e).lower():
-            if CONFIRMATION_CODE:
-                client.login(
-                    auth_info_1=USERNAME,
-                    auth_info_2=EMAIL,
-                    password=PASSWORD,
-                    confirmation_code=CONFIRMATION_CODE
-                )
-            else:
-                raise ValueError("Confirmation code required but not provided in environment variables.")
+            print("Confirmation code required, attempting to provide it.")
+            try:
+                confirmation_code = CONFIRMATION_CODE or input("Enter the confirmation code sent to your email: ")
+                client.submit_confirmation_code(confirmation_code)
+            except Exception as inner_e:
+                print(f"Failed to submit confirmation code: {inner_e}")
+                raise
         elif "Bad guest token" in str(e):
+            print("Refreshing guest token and retrying login.")
             client.refresh_guest_token()
             client.login(
                 auth_info_1=USERNAME,
