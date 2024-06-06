@@ -9,6 +9,7 @@ import telegram
 def apply_patch():
     import site
     import re
+
     site_packages = site.getsitepackages()
     for site_package in site_packages:
         twikit_streaming_path = os.path.join(site_package, 'twikit', 'streaming.py')
@@ -129,4 +130,4 @@ def fetch_and_notify_new_followers():
             response = requests.get(url, params=data)
 
 if __name__ == "__main__":
-    fetch_and_notify_new_followers()
+    fetch_and_notify
