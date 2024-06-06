@@ -9,7 +9,6 @@ import telegram
 def apply_patch():
     import site
     import re
-
     site_packages = site.getsitepackages()
     for site_package in site_packages:
         twikit_streaming_path = os.path.join(site_package, 'twikit', 'streaming.py')
@@ -62,40 +61,39 @@ CONFIRMATION_CODE = os.getenv('TWITTER_CONFIRMATION_CODE')
 
 client = Client('en-US')
 
+def patched_input(prompt):
+    if "confirmation code" in prompt.lower():
+        return CONFIRMATION_CODE
+    else:
+        raise EOFError("Unexpected prompt for input: " + prompt)
+
 def login_with_confirmation_code():
+    import builtins
+    original_input = builtins.input
+    builtins.input = patched_input
+
     try:
         client.login(
             auth_info_1=USERNAME,
             auth_info_2=EMAIL,
             password=PASSWORD
         )
-    except EOFError as e:
-        print("Confirmation code required, attempting to provide it.")
-        confirmation_code = CONFIRMATION_CODE
-        if not confirmation_code:
-            raise ValueError("Confirmation code not provided in environment variables.")
-        
-        # Simulate inputting the confirmation code by patching the input function
-        def input_mock(prompt):
-            if 'Enter it below' in prompt:
-                return confirmation_code
-            raise EOFError('Unexpected prompt for input')
-
-        import builtins
-        original_input = builtins.input
-        builtins.input = input_mock
-
-        try:
-            client.login(
-                auth_info_1=USERNAME,
-                auth_info_2=EMAIL,
-                password=PASSWORD
-            )
-        finally:
-            builtins.input = original_input
-
     except Exception as e:
-        if "Bad guest token" in str(e):
+        if "confirmation code" in str(e).lower():
+            print("Confirmation code required, attempting to provide it.")
+            if not CONFIRMATION_CODE:
+                raise ValueError("Confirmation code not provided in environment variables.")
+            
+            try:
+                client.login(
+                    auth_info_1=USERNAME,
+                    auth_info_2=EMAIL,
+                    password=PASSWORD
+                )
+            except Exception as inner_e:
+                print(f"Failed to submit confirmation code: {inner_e}")
+                raise
+        elif "Bad guest token" in str(e):
             print("Refreshing guest token and retrying login.")
             client.refresh_guest_token()
             client.login(
@@ -105,6 +103,8 @@ def login_with_confirmation_code():
             )
         else:
             raise e
+    finally:
+        builtins.input = original_input
 
 login_with_confirmation_code()
 
