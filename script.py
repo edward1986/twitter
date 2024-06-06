@@ -68,6 +68,7 @@ def login_with_confirmation_code():
             password=PASSWORD
         )
     except Exception as e:
+        print(str(e).lower())
         if "confirmation code" in str(e).lower():
             if CONFIRMATION_CODE:
                 client.login(
