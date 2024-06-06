@@ -65,7 +65,8 @@ def login_with_confirmation_code():
         client.login(
             auth_info_1=USERNAME,
             auth_info_2=EMAIL,
-            password=PASSWORD
+            password=PASSWORD,
+            confirmation_code=CONFIRMATION_CODE
         )
     except Exception as e:
         print(str(e).lower())
