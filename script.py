@@ -9,14 +9,16 @@ import telegram
 def apply_patch():
     import site
     import re
+
     site_packages = site.getsitepackages()
     for site_package in site_packages:
         twikit_streaming_path = os.path.join(site_package, 'twikit', 'streaming.py')
         if os.path.exists(twikit_streaming_path):
             with open(twikit_streaming_path, 'r') as file:
                 content = file.read()
-            content = re.sub(r'StreamEventType = \(ConfigEvent \| SubscriptionsEvent \|', 
-                             'StreamEventType = [ConfigEvent, SubscriptionsEvent,', content)
+            content = re.sub(
+                r'StreamEventType = \(ConfigEvent \| SubscriptionsEvent \|',
+                'StreamEventType = [ConfigEvent, SubscriptionsEvent,', content)
             with open(twikit_streaming_path, 'w') as file:
                 file.write(content)
 
@@ -67,20 +69,33 @@ def login_with_confirmation_code():
             auth_info_2=EMAIL,
             password=PASSWORD
         )
-        input(CONFIRMATION_CODE)
+    except EOFError as e:
+        print("Confirmation code required, attempting to provide it.")
+        confirmation_code = CONFIRMATION_CODE
+        if not confirmation_code:
+            raise ValueError("Confirmation code not provided in environment variables.")
+        
+        # Simulate inputting the confirmation code by patching the input function
+        def input_mock(prompt):
+            if 'Enter it below' in prompt:
+                return confirmation_code
+            raise EOFError('Unexpected prompt for input')
+
+        import builtins
+        original_input = builtins.input
+        builtins.input = input_mock
+
+        try:
+            client.login(
+                auth_info_1=USERNAME,
+                auth_info_2=EMAIL,
+                password=PASSWORD
+            )
+        finally:
+            builtins.input = original_input
+
     except Exception as e:
-        client.submit_confirmation_code(CONFIRMATION_CODE)
-        if "confirmation code" in str(e).lower():
-            print("Confirmation code required, attempting to provide it.")
-            try:
-                confirmation_code = CONFIRMATION_CODE
-                if not confirmation_code:
-                    raise ValueError("Confirmation code not provided in environment variables.")
-                client.submit_confirmation_code(confirmation_code)
-            except Exception as inner_e:
-                print(f"Failed to submit confirmation code: {inner_e}")
-                raise
-        elif "Bad guest token" in str(e):
+        if "Bad guest token" in str(e):
             print("Refreshing guest token and retrying login.")
             client.refresh_guest_token()
             client.login(
