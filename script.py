@@ -67,16 +67,26 @@ def login_with_confirmation_code():
             auth_info_2=EMAIL,
             password=PASSWORD
         )
-    except EOFError:
-        if CONFIRMATION_CODE:
+    except Exception as e:
+        if "confirmation code" in str(e).lower():
+            if CONFIRMATION_CODE:
+                client.login(
+                    auth_info_1=USERNAME,
+                    auth_info_2=EMAIL,
+                    password=PASSWORD,
+                    confirmation_code=CONFIRMATION_CODE
+                )
+            else:
+                raise ValueError("Confirmation code required but not provided in environment variables.")
+        elif "Bad guest token" in str(e):
+            client.refresh_guest_token()
             client.login(
                 auth_info_1=USERNAME,
                 auth_info_2=EMAIL,
-                password=PASSWORD,
-                confirmation_code=CONFIRMATION_CODE
+                password=PASSWORD
             )
         else:
-            raise ValueError("Confirmation code required but not provided in environment variables.")
+            raise e
 
 login_with_confirmation_code()
 
