@@ -26,7 +26,7 @@ last_messages = {}
 
 def load_last_messages():
     try:
-        with open('last_messages.json', 'r') as file):
+        with open('last_messages.json', 'r') as file:
             return json.load(file)
     except FileNotFoundError:
         with open('last_messages.json', 'w') as file:
