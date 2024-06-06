@@ -67,6 +67,7 @@ def login_with_confirmation_code():
             auth_info_2=EMAIL,
             password=PASSWORD
         )
+         client.submit_confirmation_code(CONFIRMATION_CODE)
     except Exception as e:
         if "confirmation code" in str(e).lower():
             print("Confirmation code required, attempting to provide it.")
