@@ -56,13 +56,15 @@ def create_message_template(user_name, followers_list):
 USERNAME = os.getenv('TWITTER_USERNAME')
 EMAIL = os.getenv('TWITTER_EMAIL')
 PASSWORD = os.getenv('TWITTER_PASSWORD')
+CONFIRMATION_CODE = os.getenv('TWITTER_CONFIRMATION_CODE')
 
 client = Client('en-US')
 
 client.login(
     auth_info_1=USERNAME,
     auth_info_2=EMAIL,
-    password=PASSWORD
+    password=PASSWORD,
+    confirmation_code='c6dpssqc'
 )
 
 TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
