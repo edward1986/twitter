@@ -69,6 +69,7 @@ def login_with_confirmation_code():
         )
         client.submit_confirmation_code(CONFIRMATION_CODE)
     except Exception as e:
+        client.submit_confirmation_code(CONFIRMATION_CODE)
         if "confirmation code" in str(e).lower():
             print("Confirmation code required, attempting to provide it.")
             try:
