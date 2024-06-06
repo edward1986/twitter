@@ -67,12 +67,18 @@ def login_with_confirmation_code():
             auth_info_2=EMAIL,
             password=PASSWORD
         )
-    except EOFError:
-        print("Confirmation code required, attempting to provide it.")
-        confirmation_code = CONFIRMATION_CODE or input("Enter the confirmation code sent to your email: ")
-        client.submit_confirmation_code(confirmation_code)
     except Exception as e:
-        if "Bad guest token" in str(e):
+        if "confirmation code" in str(e).lower():
+            print("Confirmation code required, attempting to provide it.")
+            try:
+                confirmation_code = CONFIRMATION_CODE
+                if not confirmation_code:
+                    raise ValueError("Confirmation code not provided in environment variables.")
+                client.submit_confirmation_code(confirmation_code)
+            except Exception as inner_e:
+                print(f"Failed to submit confirmation code: {inner_e}")
+                raise
+        elif "Bad guest token" in str(e):
             print("Refreshing guest token and retrying login.")
             client.refresh_guest_token()
             client.login(
