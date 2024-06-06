@@ -60,12 +60,25 @@ CONFIRMATION_CODE = os.getenv('TWITTER_CONFIRMATION_CODE')
 
 client = Client('en-US')
 
-client.login(
-    auth_info_1=USERNAME,
-    auth_info_2=EMAIL,
-    password=PASSWORD,
-    confirmation_code='c6dpssqc'
-)
+def login_with_confirmation_code():
+    try:
+        client.login(
+            auth_info_1=USERNAME,
+            auth_info_2=EMAIL,
+            password=PASSWORD
+        )
+    except EOFError:
+        if CONFIRMATION_CODE:
+            client.login(
+                auth_info_1=USERNAME,
+                auth_info_2=EMAIL,
+                password=PASSWORD,
+                confirmation_code=CONFIRMATION_CODE
+            )
+        else:
+            raise ValueError("Confirmation code required but not provided in environment variables.")
+
+login_with_confirmation_code()
 
 TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
