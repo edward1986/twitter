@@ -112,3 +112,11 @@ jobs:
           else:
               print('No messages found')
           EOF
+
+      - name: Commit updated hash
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          git add last_message_hash.txt
+          git commit -m 'Update last message hash'
+          git push
