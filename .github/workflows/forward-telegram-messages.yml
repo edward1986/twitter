@@ -74,8 +74,20 @@ jobs:
           # List of channels and their respective chat IDs
           channels = [
               {'url': 'https://t.me/s/Rasoolkgfx_3', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_1')},
-              {'url': 'https://t.me/s/AnotherChannel', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
-              # Add more channels as needed
+              {'url': 'https://t.me/s/forexero', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
+              {'url': 'https://t.me/s/pipxpert', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
+              {'url': 'https://t.me/s/XAUUSDP', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
+              {'url': 'https://t.me/s/safemnaagment', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
+              {'url': 'https://t.me/s/Sarfarazfxo1', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
+              {'url': 'https://t.me/s/MrKingTeamGoldSignals', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
+              {'url': 'https://t.me/s/forexTrading09hub', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
+              {'url': 'https://t.me/s/ICTSmartMoneyStudent', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
+              {'url': 'https://t.me/s/TFXC_FREE', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
+              {'url': 'https://t.me/s/gold_pro_trader_official', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
+              {'url': 'https://t.me/s/Goldman1134', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
+              {'url': 'https://t.me/s/forexflights01', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
+              {'url': 'https://t.me/s/GOLDPROLUCKY', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
+              {'url': 'https://t.me/s/WolfTrading06', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
           ]
 
           bot_token = os.getenv('TELEGRAM_BOT_TOKEN')
