@@ -73,21 +73,21 @@ jobs:
 
           # List of channels and their respective chat IDs
           channels = [
-              {'url': 'https://t.me/s/Rasoolkgfx_3', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_1')},
-              {'url': 'https://t.me/s/forexero', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
-              {'url': 'https://t.me/s/pipxpert', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
-              {'url': 'https://t.me/s/XAUUSDP', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
-              {'url': 'https://t.me/s/safemnaagment', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
-              {'url': 'https://t.me/s/Sarfarazfxo1', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
-              {'url': 'https://t.me/s/MrKingTeamGoldSignals', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
-              {'url': 'https://t.me/s/forexTrading09hub', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
-              {'url': 'https://t.me/s/ICTSmartMoneyStudent', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
-              {'url': 'https://t.me/s/TFXC_FREE', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
-              {'url': 'https://t.me/s/gold_pro_trader_official', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
-              {'url': 'https://t.me/s/Goldman1134', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
-              {'url': 'https://t.me/s/forexflights01', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
-              {'url': 'https://t.me/s/GOLDPROLUCKY', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
-              {'url': 'https://t.me/s/WolfTrading06', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
+              {'id': "1", 'url': 'https://t.me/s/Rasoolkgfx_3', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_1')},
+              {'id': "2",'url': 'https://t.me/s/forexero', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
+              {'id': "3",'url': 'https://t.me/s/pipxpert', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
+              {'id': "4",'url': 'https://t.me/s/XAUUSDP', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
+              {'id': "5",'url': 'https://t.me/s/safemnaagment', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
+              {'id': "6",'url': 'https://t.me/s/Sarfarazfxo1', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
+              {'id': "7",'url': 'https://t.me/s/MrKingTeamGoldSignals', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
+              {'id': "8",'url': 'https://t.me/s/forexTrading09hub', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
+              {'id': "9",'url': 'https://t.me/s/ICTSmartMoneyStudent', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
+              {'id': "10",'url': 'https://t.me/s/TFXC_FREE', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
+              {'id': "11",'url': 'https://t.me/s/gold_pro_trader_official', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
+              {'id': "12",'url': 'https://t.me/s/Goldman1134', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
+              {'id': "13",'url': 'https://t.me/s/forexflights01', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
+              {'id': "14",'url': 'https://t.me/s/GOLDPROLUCKY', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
+              {'id': "15",'url': 'https://t.me/s/WolfTrading06', 'chat_id': os.getenv('TELEGRAM_CHAT_ID_2')},
           ]
 
           bot_token = os.getenv('TELEGRAM_BOT_TOKEN')
@@ -106,7 +106,7 @@ jobs:
                   latest_message_hash = hashlib.md5(latest_message.encode()).hexdigest()
 
                   # Read the last message hash from file
-                  last_message_hash_file = f'last_message_hash_{telegram_channel_url}.txt'
+                  last_message_hash_file = f'last_message_hash_{channel['id']}.txt'
                   if os.path.exists(last_message_hash_file):
                       with open(last_message_hash_file, 'r') as file:
                           last_message_hash = file.read().strip()
@@ -120,12 +120,7 @@ jobs:
 
                       # Send the message to the target Telegram channel
                       send_message_url = f'https://api.telegram.org/bot{bot_token}/sendMessage'
-                      response = requests.post(send_message_url, data={'chat_id': chat_id, 'text': latest_message})
-                      if response.status_code != 200:
-                          print(f'Failed to send message to {chat_id}: {response.text}')
-                      else:
-                          print(f'Message sent successfully to {chat_id}')
-
+                     
                       # Send the latest message to the specified email
                       to_email = os.getenv('TO_EMAIL')
                       send_email('Latest Telegram Message', latest_message, to_email)
