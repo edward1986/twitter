@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          persist-credentials: false
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -29,6 +31,7 @@ jobs:
           EMAIL: ${{ secrets.EMAIL }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           TO_EMAIL: ${{ secrets.TO_EMAIL }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           python - <<EOF
           import os
@@ -114,9 +117,11 @@ jobs:
           EOF
 
       - name: Commit updated hash
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           git config --global user.name 'github-actions'
           git config --global user.email 'github-actions@github.com'
           git add last_message_hash.txt
           git commit -m 'Update last message hash'
-          git push
+          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git HEAD:${{ github.ref }}
