@@ -25,14 +25,14 @@ jobs:
       - name: Forward messages
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_TARGET_CHAT_ID: ${{ secrets.TELEGRAM_TARGET_CHAT_ID }}
+          TELEGRAM_TARGET_CHAT_ID: ${{ secrets.CHAT_ID }}
         run: |
           python - <<EOF
           import requests
           from bs4 import BeautifulSoup
 
           # URL of the public Telegram channel
-          telegram_channel_url = 'https://t.me/s/YOUR_CHANNEL_NAME'
+          telegram_channel_url = 'https://t.me/s/Rasoolkgfx_3'
 
           # Fetch the latest messages from the public URL
           response = requests.get(telegram_channel_url)
