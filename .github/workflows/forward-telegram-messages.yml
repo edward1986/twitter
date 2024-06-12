@@ -37,6 +37,7 @@ jobs:
           from email.mime.text import MIMEText
           import requests
           from bs4 import BeautifulSoup
+          import hashlib
 
           def send_email(subject, body, to_email):
               from_email = os.getenv('EMAIL')
@@ -74,20 +75,40 @@ jobs:
           soup = BeautifulSoup(response.text, 'html.parser')
 
           # Extract the latest message (assuming it's the last <div> with class "tgme_widget_message_text")
-          latest_message = soup.find_all('div', class_='tgme_widget_message_text')[-1].get_text(strip=True)
+          latest_message_divs = soup.find_all('div', class_='tgme_widget_message_text')
+          if latest_message_divs:
+              latest_message = latest_message_divs[-1].get_text(strip=True)
+              latest_message_hash = hashlib.md5(latest_message.encode()).hexdigest()
 
-          # Send the message to the target Telegram channel
-          bot_token = os.getenv('TELEGRAM_BOT_TOKEN')
-          chat_id = os.getenv('TELEGRAM_CHAT_ID')
-          send_message_url = f'https://api.telegram.org/bot{bot_token}/sendMessage'
+              # Read the last message hash from file
+              last_message_hash_file = 'last_message_hash.txt'
+              if os.path.exists(last_message_hash_file):
+                  with open(last_message_hash_file, 'r') as file:
+                      last_message_hash = file.read().strip()
+              else:
+                  last_message_hash = ''
 
-          response = requests.post(send_message_url, data={'chat_id': chat_id, 'text': latest_message})
-          if response.status_code != 200:
-              print(f'Failed to send message: {response.text}')
+              if latest_message_hash != last_message_hash:
+                  # Update the last message hash file
+                  with open(last_message_hash_file, 'w') as file:
+                      file.write(latest_message_hash)
+
+                  # Send the message to the target Telegram channel
+                  bot_token = os.getenv('TELEGRAM_BOT_TOKEN')
+                  chat_id = os.getenv('TELEGRAM_CHAT_ID')
+                  send_message_url = f'https://api.telegram.org/bot{bot_token}/sendMessage'
+
+                  response = requests.post(send_message_url, data={'chat_id': chat_id, 'text': latest_message})
+                  if response.status_code != 200:
+                      print(f'Failed to send message: {response.text}')
+                  else:
+                      print('Message sent successfully to Telegram')
+
+                  # Send the latest message to the specified email
+                  to_email = os.getenv('TO_EMAIL')
+                  send_email('Latest Telegram Message', latest_message, to_email)
+              else:
+                  print('No new messages to forward')
           else:
-              print('Message sent successfully to Telegram')
-
-          # Send the latest message to the specified email
-          to_email = os.getenv('TO_EMAIL')
-          send_email('Latest Telegram Message', latest_message, to_email)
+              print('No messages found')
           EOF
