@@ -92,7 +92,7 @@ jobs:
                   latest_message_hash = hashlib.md5(latest_message.encode()).hexdigest()
 
                   # Read the last message hash from file
-                  last_message_hash_file = f'last_message_hash_{chat_id}.txt'
+                  last_message_hash_file = f'last_message_hash_{telegram_channel_url}.txt'
                   if os.path.exists(last_message_hash_file):
                       with open(last_message_hash_file, 'r') as file:
                           last_message_hash = file.read().strip()
