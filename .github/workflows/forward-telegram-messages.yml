@@ -25,7 +25,7 @@ jobs:
       - name: Forward messages
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_TARGET_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           python - <<EOF
           import requests
@@ -43,7 +43,7 @@ jobs:
 
           # Send the message to the target Telegram channel
           bot_token = '${{ secrets.TELEGRAM_BOT_TOKEN }}'
-          chat_id = '${{ secrets.TELEGRAM_TARGET_CHAT_ID }}'
+          chat_id = '${{ secrets.TELEGRAM_CHAT_ID }}'
           send_message_url = f'https://api.telegram.org/bot{bot_token}/sendMessage'
 
           response = requests.post(send_message_url, data={'chat_id': chat_id, 'text': latest_message})
